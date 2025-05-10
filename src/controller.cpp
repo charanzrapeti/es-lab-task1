@@ -13,21 +13,52 @@
 #include "controller.h"
 #include <iostream>
 
-PIDController::PIDController() { update_params(kp, kd, ki); }
+PIDController::PIDController() { update_params(kp, ki, kd); }
 
-void PIDController::setClamp(double max, double min) {
-  ///@todo Implement setClamp for setting the output limits
+void PIDController::setClamp(double max_, double min_) {
+  max = max_;
+  min = min_;
 }
+
 
 double PIDController::output(double error) {
-  ///@todo Implement the PID controller output calculation
-  return 0;
+  e2 = e1;
+  e1 = e0;
+  e0 = error;
+
+  integral += e0;
+
+  u0 = kp * e0 + kd * (e0 - e1) + ki * integral;
+
+  // Debug output
+  std::cout << "Output calculation\n";
+  std::cout << "U0 is " << u0 << "\n";
+
+
+  // Clamp after hack
+  if (u0 > max) u0 = max;
+  else if (u0 <= min) u0 = 1;
+
+  u2 = u1;
+  u1 = u0;
+
+  return u0;
 }
 
+
+
+
+
 void PIDController::update_params(double kp_, double ki_, double kd_) {
-  ///@todo Implement the update_params function for PID controller
+  kp = kp_;
+  ki = ki_;
+  kd = kd_;
+  std::cout << "Received params " << kp_ << ki_ << kd_ <<  "updated params " << kp << ki << kd << std::endl;
 }
+
 void PIDController::reset() {
-  ///@todo Implement the reset function for PID controller called by simulator
-  /// when simulation is reset
+  e0 = e1 = e2 = 0;
+  u0 = u1 = u2 = 0;
+  integral = 0;
 }
+

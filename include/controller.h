@@ -85,8 +85,18 @@ public:
    */
   double kp = 0.0;
   double kd = 0.0;
-  double ki = 0.0;
+  double ki = 1.0;
   ///@todo Intialize paramaters for discrete PID controller
+
+  // Output limits
+  double max = 1000.0, min = -10.0;
+
+  // Internal state for errors and outputs
+  double e0 = 0, e1 = 0, e2 = 0;
+  double u0 = 0, u1 = 0, u2 = 0;
+
+  // For integral calculation
+  double integral = 0;
 
   PIDController();
 

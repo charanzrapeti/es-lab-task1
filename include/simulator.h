@@ -54,6 +54,8 @@ public:
   std::unique_ptr<Controller> m_controller; ///< Controller object
   SimParams m_params;                       ///< Simulation Parameters
   Cart m_cart;                              ///< Cart object
+  std::mutex m_params_mutex;
+
 
   // Synchronization variables between simulator and comm server
   std::atomic<bool> g_start{false}; ///< Flag to start the simulation
